@@ -23,6 +23,9 @@ foreign import java unsafe "@static java.nio.file.Paths.get"
 foreign import java unsafe "@static java.nio.file.Files.readAllBytes"
     readAllBytes :: Path -> IO JByteArray
 
+readFileBytes :: String -> IO JByteArray
+readFileBytes uri = readAllBytes =<< getPath =<< createURI uri
+
 toByteString :: JByteArray -> ByteString
 toByteString ba = B.pack $ fromIntegral <$> bs
     where bs = fromJava ba :: [Byte]
@@ -30,8 +33,19 @@ toByteString ba = B.pack $ fromIntegral <$> bs
 main :: IO ()
 main = do
     hSetBuffering stdout NoBuffering
-    putStrLn "Please enter a valid file URI:"
-    bytes <- toByteString <$> (readAllBytes =<< getPath =<< createURI =<< getLine)
-    putStrLn "Number of bytes read:"
-    putStrLn $ show $ B.length bytes
+    putStr "Please enter a valid file URI: "
+    uri <- getLine
+    putStr "Reading file contents into memory: "
+    bytes <- readFileBytes uri
+    putStrLn "done"
+    putStr "Number of bytes read: "
+    bytesRead <- java $ withObject bytes alength
+    putStrLn $ show $ bytesRead
+    putStr "Converting from JByteArray to ByteString: "
+    let bs = toByteString bytes
+    putStrLn "done"
+    putStr "Number of bytes converted: "
+    putStrLn $ show $ B.length bs
+
+
 
