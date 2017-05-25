@@ -8,7 +8,8 @@ cabal-version:       >=1.10
 
 executable eta-readfile-example
     main-is:             Main.hs
-    build-depends:       base >=4.8 && <4.9
+    build-depends:       base >=4.8 && <4.9,
+                         bytestring
     hs-source-dirs:      source
     default-language:    Haskell2010
 
