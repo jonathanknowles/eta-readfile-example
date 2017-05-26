@@ -1,4 +1,5 @@
-{-# LANGUAGE MagicHash #-}
+{-# LANGUAGE BangPatterns  #-}
+{-# LANGUAGE MagicHash     #-}
 
 module Main where
 
@@ -42,7 +43,7 @@ main = do
     bytesRead <- java $ withObject bytes alength
     putStrLn $ show $ bytesRead
     putStr "Converting from JByteArray to ByteString: "
-    let bs = toByteString bytes
+    let !bs = toByteString bytes
     putStrLn "done"
     putStr "Number of bytes converted: "
     putStrLn $ show $ B.length bs
